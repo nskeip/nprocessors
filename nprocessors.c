@@ -1,6 +1,6 @@
 #ifdef __linux__
-#include <sys/sysinfo.h>
-#define nprocs() get_nprocs()
+    #include <sys/sysinfo.h>
+    #define nprocs() get_nprocs()
 #elif _WIN32
 
     #if _WIN32_WINNT >= _WIN32_WINNT_WIN7
@@ -21,23 +21,23 @@
 
 #elif __APPLE__
 
-#include <sys/sysctl.h>
+    #include <sys/sysctl.h>
 
-unsigned int nprocs(void) {
-    int nm[2] = {CTL_HW, HW_AVAILCPU};
-    size_t len = 4;
-    uint32_t count;
+    unsigned int nprocs(void) {
+        int nm[2] = {CTL_HW, HW_AVAILCPU};
+        size_t len = 4;
+        uint32_t count;
 
-    sysctl(nm, 2, &count, &len, NULL, 0);
+        sysctl(nm, 2, &count, &len, NULL, 0);
 
-    if (count < 1) {
-        return 4;
+        if (count < 1) {
+            return 4;
+        }
+        return count;
     }
-    return count;
-}
 
 #else
-#define nprocs() 4
+    #define nprocs() 4
 #endif
 
 #include <stdio.h>
