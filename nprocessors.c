@@ -2,8 +2,23 @@
 #include <sys/sysinfo.h>
 #define nprocs() get_nprocs()
 #elif _WIN32
-#include <windows.h>
-#define nprocs() GetActiveProcessorCount(ALL_PROCESSOR_GROUPS)
+
+    #if _WIN32_WINNT >= _WIN32_WINNT_WIN7
+        #include <windows.h>
+        #define nprocs() GetActiveProcessorCount(ALL_PROCESSOR_GROUPS)
+    #elif
+        #include <sysinfoapi.h>
+        unsigned int nprocs(void) {
+            SYSTEM_INFO info;
+
+            GetSystemInfo(&info);
+            if(info.dwNumberOfProcessors < 1) {
+                return 4;
+            }
+            return info.dwNumberOfProcessors;
+        }
+    #endif
+
 #elif __APPLE__
 
 #include <sys/sysctl.h>
