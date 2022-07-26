@@ -11,6 +11,20 @@ unsigned int nprocs(void) {
     }
     return info.dwNumberOfProcessors;
 }
+#elif __APPLE__
+#include <sys/sysctl.h>
+unsigned int nprocs(void) {
+    int nm[2] = {CTL_HW, HW_AVAILCPU};
+    size_t len = 4;
+    uint32_t count;
+
+    sysctl(nm, 2, &count, &len, NULL, 0);
+
+    if(count < 1) {
+        return 4;
+    }
+    return count;
+}
 #else
 #define nprocs() 4
 #endif
