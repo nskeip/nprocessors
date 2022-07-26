@@ -6,7 +6,7 @@
     #if _WIN32_WINNT >= _WIN32_WINNT_WIN7
         #include <windows.h>
         #define nprocs() GetActiveProcessorCount(ALL_PROCESSOR_GROUPS)
-    #elif
+    #else
         #include <sysinfoapi.h>
         unsigned int nprocs(void) {
             SYSTEM_INFO info;
